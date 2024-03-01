@@ -5,3 +5,5 @@ Genres are loaded from a file when initializing the app and thus the genres can 
 as genre and this app pick the first that matches. Author name is taken from libris database. json output have been rewritten
 past hand in as they were nested dictionaires rather than in a flat list form and useful with pandas. Original app with nested 
 json as output is also found as app.bak 
+The repository also contains the pytest files and the test_protocol spreadsheet. The code is not cleared of rubbish comments which 
+it should be...
