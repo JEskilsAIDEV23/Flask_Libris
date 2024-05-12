@@ -42,8 +42,8 @@ def libris_parse(data, author_url, OL):
                         author_id = OL
                         book_genre = 'X'
                         #book = Books(id, book_title, author_id, author_name, book_genre)
-                        query_add = "INSERT INTO books (id, book_title, author_id, author_name, book_genre, AuthLibrisSearch) VALUES \
-                            (?, ?, ?, ?, ?, ?)"  
+                        query_add = 'INSERT INTO books (id, book_title, author_id, author_name, book_genre, "AuthLibrisSearch") VALUES \
+                            (?, ?, ?, ?, ?, ?)'  
                         db.execute_query(query_add, (id, book_title, author_id, author_name, book_genre, 'Libris'))   
             except:
                 print (f"DB-Error: (Book with {id} already in DB)")
@@ -69,8 +69,8 @@ class Author:
             return None
         db = get_db_conn()
         try:
-            query_add = "INSERT INTO Authors (OL_id, author_name, top_work, wiki_bio) VALUES \
-            (?, ?, ?, ?)"
+            query_add = 'INSERT INTO Authors ("OL_id", "Author_name", "Top_work", wiki_bio) VALUES \
+            (?, ?, ?, ?)'
             db.execute_query(query_add, (self.OL_id, self.author_name, self.top_work, self.wiki_bio))
         except:
             print(f"DB-Error, Author {OL_id}, {author_name} already in DB")
@@ -112,8 +112,7 @@ def parse_file(OL):
 
     for i in books_OL.keys():
         try:  
-            query_add = "INSERT INTO OL_books (OL_Aid, OL_Wid, OL_Title, OL_Descr, OL_link) VALUES \
-            (?, ?, ?, ?, ?)"
+            query_add = 'INSERT INTO "OL_Books" ("OL_Aid", "OL_Wid", "OL_Title", "OL_Descr", "OL_link") VALUES (?, ?, ?, ?, ?)'
             db.execute_query(query_add, (OL, i, books_OL[i]['book_title'], books_OL[i]['description'], books_OL[i]['link'] ))
         except:
             print (f"DB-Error: (Book {i} already in db)")   
@@ -152,8 +151,8 @@ def parse_works(OL, books_OL, genre_dict):
             
             try:
             # print(key, OL, title, isbn_10, isbn_13+'\n')    
-                query_add = "INSERT INTO OL_isbn (OL_Wid, OL_Bid, OL_Aid, OL_Title, isbn_10, isbn_13, genre) VALUES \
-                (?, ?, ?, ?, ?, ?, ?)"
+                query_add = 'INSERT INTO "OL_isbn" ("OL_Wid", "OL_Bid", "OL_Aid", "OL_Title", isbn_10, isbn_13, genre) VALUES \
+                (?, ?, ?, ?, ?, ?, ?)'
             #  print(query_add, (key, OL, title, isbn_10, isbn_13 ))
                 db.execute_query(query_add, (i, key, OL, title, isbn_10, isbn_13, genre )) 
             except:
@@ -173,8 +172,8 @@ def OL_book_isbn10():
         author_name = i[3]
         book_genre = i[4]
         description = i[5]
-        query_add = "INSERT INTO books (id, book_title, author_id, author_name, book_genre, AuthLibrisSearch,description) VALUES \
-        (?, ?, ?, ?, ?, ?, ?)"
+        query_add = 'INSERT INTO books (id, book_title, author_id, author_name, book_genre, "AuthLibrisSearch",description) VALUES \
+        (?, ?, ?, ?, ?, ?, ?)'
         try:
             db = get_db_conn()
             db.execute_query(query_add, (id, book_title, author_id, author_name, book_genre, 'OL-isbn10',description))
@@ -196,8 +195,8 @@ def OL_book_isbn13():
         author_name = i[3]
         book_genre = i[4]
         description = i[5]
-        query_add = "INSERT INTO books (id, book_title, author_id, author_name, book_genre, AuthLibrisSearch,description) VALUES \
-        (?, ?, ?, ?, ?, ?, ?)"
+        query_add = 'INSERT INTO books (id, book_title, author_id, author_name, book_genre, "AuthLibrisSearch",description) VALUES \
+        (?, ?, ?, ?, ?, ?, ?)'
         try:
             db = get_db_conn()
             db.execute_query(query_add, (id, book_title, author_id, author_name, book_genre, 'OL-isbn13',description))

@@ -151,3 +151,119 @@ def search_books(**kwargs):
             return data
 
 #search_books(title='1984')
+
+
+"""
+#author
+
+SELECT DISTINCT (books.book_title),
+    books.book_title, 
+    books.book_id, 
+    books.id, 
+    books.author_name, 
+    books.author_id, 
+    books.book_genre, 
+    books.description 
+FROM 
+    books 
+WHERE 
+    books.author_name LIKE ?
+    
+#title
+
+SELECT DISTINCT (books.book_title),
+    books.book_title, 
+    books.book_id, 
+    books.id, 
+    books.author_name, 
+    books.author_id, 
+    books.book_genre, 
+    books.description 
+FROM 
+    books 
+WHERE 
+    books.book_title LIKE ?
+
+#genre
+
+SELECT DISTINCT (books.book_title),
+    books.book_title, 
+    books.book_id, 
+    books.id, 
+    books.author_name, 
+    books.author_id, 
+    books.book_genre, 
+    books.description 
+FROM 
+    books    
+WHERE 
+    books.book_genre LIKE ? 
+
+#title&author
+
+SELECT DISTINCT (books.book_title), 
+    books.book_id, 
+    books.id, 
+    books.author_name, 
+    books.author_id, 
+    books.book_genre, 
+    books.description 
+    FROM 
+        books 
+    WHERE 
+        books.book_title LIKE ?
+        AND 
+        books.author_name LIKE ?
+
+#genre&author
+
+    SELECT DISTINCT (books.book_title), 
+    books.book_id, 
+    books.id, 
+    books.author_name, 
+    books.author_id, 
+    books.book_genre, 
+    books.description 
+    FROM 
+        books
+    WHERE 
+        books.book_genre LIKE ?
+    AND 
+        books.author_name LIKE ?
+
+ #genre&title  
+
+    SELECT DISTINCT (books.book_title), 
+    books.book_id, 
+    books.id, 
+    books.author_name, 
+    books.author_id, 
+    books.book_genre, 
+    books.description 
+    FROM 
+        books     
+    WHERE 
+        books.book_genre LIKE ?
+    AND 
+        books.book_title LIKE ?    
+
+        
+#genre&title&author      
+
+    SELECT DISTINCT (books.book_title), 
+    books.book_id, 
+    books.id, 
+    books.author_name, 
+    books.author_id, 
+    books.book_genre, 
+    books.description 
+    FROM 
+        books        
+    WHERE 
+        books.book_genre LIKE ?
+    AND 
+        books.book_title LIKE ? 
+    AND 
+        books.author_name LIKE ?       
+
+    """

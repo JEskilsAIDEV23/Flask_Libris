@@ -178,7 +178,7 @@ def search_books():
         ret_data = []
         for i in range(len(posts)):
             db = get_db_conn()
-            query_Book_r = "SELECT books_r.rating FROM books_r WHERE books_r.book_id = ?"
+            query_Book_r = "SELECT books_r.rating FROM books_r WHERE books_r.book_id = ?" #'SELECT books_r."Rating" FROM books_r WHERE books_r.book_id = ?'
             reviews = db.GET_query(query_Book_r, (posts[i][1],) )
             db.db_close()
             if reviews == []:
@@ -226,7 +226,7 @@ def search_books():
     ret_data = []
     for i in range(len(posts)):
         db = get_db_conn()
-        query_Book_r = "SELECT books_r.rating FROM books_r WHERE books_r.book_id = ?"
+        query_Book_r = "SELECT books_r.rating FROM books_r WHERE books_r.book_id = ?" #'SELECT books_r."Rating" FROM books_r WHERE books_r.book_id = ?'
         reviews = db.GET_query(query_Book_r, (posts[i][1],) )
         db.db_close()
         if reviews == []:
@@ -256,7 +256,7 @@ def search_books():
 def book_unique(Book_id):
 
      #same logic to check reviews for a single book
-    query_Book_r = "SELECT books_r.rating FROM books_r WHERE Books_r.Book_id = ?"
+    query_Book_r = "SELECT books_r.rating FROM books_r WHERE Books_r.Book_id = ?" #'SELECT books_r."Rating" FROM books_r WHERE books_r.book_id = ?'
     db = get_db_conn()
     review = db.GET_query(query_Book_r, (Book_id,) )
     db.db_close()
@@ -265,7 +265,7 @@ def book_unique(Book_id):
     if review != []:
         rev = review[0][0]
 
-    query_Book_id = "SELECT * FROM Books WHERE Books.Book_id = ?"
+    query_Book_id = "SELECT * FROM books WHERE books.book_id = ?" #'SELECT * FROM books WHERE CAST(book_id AS INTEGER) = ?'
     db = get_db_conn()
     post = db.GET_query(query_Book_id, (Book_id,) )
     db.db_close()
@@ -289,7 +289,7 @@ def book_unique(Book_id):
 def top_books():
     #uses the simplified sql view Top-Books to find the 5 highest ranked books
     db = get_db_conn()
-    query = f"SELECT * FROM TOP_books"
+    query = f"SELECT * FROM TOP_books" #'SELECT * FROM "Top_Books"'
     books = db.GET_query(query)
     ret_data = []
     if len(books)<5:
@@ -348,7 +348,7 @@ def post_books():
             if (OL_id+BT+AN+AI+G+D) < 6:
                 return f"\n Error: None valid and Missing data, Provided records with (1) are valid: id ({OL_id}), title ({BT}), author ({AN}), author_id ({AI}), genre ({G}), description ({D})"
         if (OL_id+BT+AN+AI+G+D) == 6:
-            query_isbn = "SELECT * FROM books WHERE books.id = ?"
+            query_isbn = "SELECT * FROM books WHERE books.id = ?" #'SELECT * FROM books WHERE CAST(id AS TEXT) = ?'
             db = get_db_conn()
             check = db.GET_query(query_isbn, (id,) )
             db.db_close()
@@ -371,7 +371,9 @@ def post_books():
                     raise ValueError ("description require a valid input not empty or blank")
                 else:
                     query_add = "INSERT INTO books (id, book_title, author_id, author_name, book_genre, AuthLibrisSearch, description) VALUES \
-                        (?, ?, ?, ?, ?, ?, ?)"
+                        (?, ?, ?, ?, ?, ?, ?)" 
+                    #"INSERT INTO books (id, book_title, author_id, author_name, book_genre, "AuthLibrisSearch", description) VALUES ('OL1', 'Test', 'OL23', 'Trazan', 'Hmm','yes' , 'Test')"
+                    #'INSERT INTO books (id, book_title, author_id, author_name, book_genre, "AuthLibrisSearch", description) VALUES (?, ?, ?, ?, ?, ?, ?)'
                     db = get_db_conn()
                     db.execute_query(query_add, (id, book_title, author_id, author_name, book_genre, AuthLibrisSearch, description))
                     db.db_close()
@@ -384,18 +386,18 @@ def delete(Book_id):
     #check if book exist in reviews and books before deletion
     db = get_db_conn()
     exists = ''
-    query_Book_id = "SELECT * FROM Books WHERE Books.Book_id = ?"
+    query_Book_id = "SELECT * FROM Books WHERE Books.Book_id = ?" #'SELECT * FROM books WHERE CAST(book_id AS INTEGER) = ?'
     post_book = db.GET_query(query_Book_id, (Book_id,) )
     if post_book != []:
         exists += 'B'
-    query_Review = "SELECT * FROM Review WHERE Review.Book_id = ?"
+    query_Review = "SELECT * FROM Review WHERE Review.Book_id = ?" #'SELECT * FROM "Review" WHERE CAST(book_id AS INTEGER) = ?'
     post_review = db.GET_query(query_Review, (Book_id,) )
     if post_review != []:
         exists += 'R'
     if exists == '':
         return f"Book with Book_id {Book_id} don't exist in database"
-    query_deleteB = f'DELETE FROM Books WHERE Book_id = ?'
-    query_deleteR = f'DELETE FROM Review WHERE Book_id = ?'   
+    query_deleteB = f'DELETE FROM Books WHERE Book_id = ?' #'DELETE FROM books WHERE book_id = ?'
+    query_deleteR = f'DELETE FROM Review WHERE Book_id = ?' #'DELETE FROM "Review" WHERE book_id = ?'
     if exists == 'BR':
         db.execute_query(query_deleteB, (Book_id,))
         db.execute_query(query_deleteR, (Book_id,))
@@ -416,7 +418,7 @@ def edit(Book_id):
     #dependencies to change and risk errors)
     if request.method == 'PUT':
         db = get_db_conn()
-        query_Book_id = "SELECT * FROM Books WHERE Books.Book_id = ?"
+        query_Book_id = "SELECT * FROM Books WHERE Books.Book_id = ?" #'SELECT * FROM books WHERE CAST(book_id AS INTEGER) = ?'
         post_book = db.GET_query(query_Book_id, (Book_id,) )
         db.db_close()
         if post_book == []:
@@ -491,6 +493,8 @@ def edit(Book_id):
             #It refused to work with 100% safe code somehow
             query_update = f"UPDATE Books SET Book_Title ='{Book_Title}', Author_name='{Author_name}', \
                 Author_id='{Author_id}', book_genre='{Genre}', AuthLibrisSearch= '{AuthLibrisSearch}',Description='{Description}' WHERE Book_id = ?"
+            
+            #'UPDATE books SET book_title ='Book_Title', author_name='Author_name', author_id='Author_id', book_genre='Genre', "AuthLibrisSearch"= 'AuthLibrisSearch',description='Description' WHERE book_id = ?'
             db = get_db_conn()
             db.execute_query(query_update, (Book_id,))
             db.db_close()
@@ -512,7 +516,7 @@ def add_book_review(*args,**kwargs):
         if 'book_id' not in data:
             return f"Invalid data or missing data"
     db = get_db_conn()
-    query_Book_id = "SELECT * FROM books WHERE books.book_id = ?"
+    query_Book_id = "SELECT * FROM books WHERE books.book_id = ?" #'SELECT * FROM books WHERE CAST(book_id AS INTEGER) = ?'
     post = db.GET_query(query_Book_id, (Book_id,) )
     if post == []:
         return f"Book_id {Book_id} not found in database\
@@ -537,6 +541,10 @@ def add_book_review(*args,**kwargs):
                 return "value error: rating is not an integer or null"
             query_add = "INSERT INTO review (book_id, review_name, rating, review_text) VALUES \
                 (?, ?, ?, ?)"
+            
+            #'INSERT INTO "Review" (book_id, review_name, rating, review_text) VALUES (?, ?, ?, ?)'
+            
+            #'INSERT INTO "Review" (book_id, review_name, rating, review_text) VALUES (3, 'Kal', 1, 'Useless but funny')'
             db.execute_query(query_add, (Book_id, Customer_name, Customer_grade, Customer_text))
             db.db_close()
             return f"Review added to Book_id: {Book_id}"
@@ -551,6 +559,8 @@ def all_reviews():
     #SQL-madness is fun
     query = "SELECT Review.id, books.book_id, books.book_title, Review.review_name, \
         Review.rating, Review.review_text FROM Review, Books WHERE Books.Book_id = Review.Book_id"
+    #'SELECT "Review".id, books.book_id, books.book_title, "Review".review_name, "Review".rating, "Review".review_text FROM "Review", books WHERE books.book_id = "Review".book_id'
+    
     post = db.GET_query(query)
     db.db_close()
     data = {}
@@ -571,6 +581,9 @@ def book_review(Book_id):
     #___SQL___Easier to solve nested things with it
     query = f"SELECT Review.id, Books.Book_Title, books.author_name, Review.review_name, Review.rating,\
           Review.review_text FROM Review, Books WHERE books.book_id = Review.book_id and books.book_id = ?"
+    
+    #'SELECT "Review".id, books.book_title, books.author_name, "Review".review_name, "Review".rating,"Review".review_text FROM "Review", books WHERE books.book_id = "Review".book_id and books.book_id = ?'
+
     post = db.GET_query(query, (Book_id,))
     if len(post) == 0:
         return "No Review exist for this book"		
