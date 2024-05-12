@@ -4,7 +4,7 @@ from app import app
 import json
 import requests
 from unittest.mock import MagicMock, patch
-from db_OOP import *
+from sqlite__db_OOP import *
 
 @pytest.fixture
 def client():

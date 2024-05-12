@@ -1,9 +1,9 @@
-from db_OOP import *
+from sqlite__db_OOP import *
 #Free search local database as author is picked from external source the author name might vary
 
 def free_search_author(author):
     db = get_db_conn()
-    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.author_name LIKE ?"
+    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.author_name LIKE %s"
     posts = db.GET_query(query, (f'%{author}%',))
     db.db_close()
     print(f'%{author}%')
@@ -12,7 +12,7 @@ def free_search_author(author):
 
 def free_search_title(title):
     db = get_db_conn()
-    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_title LIKE ?"
+    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_title LIKE %s"
     posts = db.GET_query(query, (f'%{title}%',))
     db.db_close()
     print(f'%{title}%')
@@ -21,7 +21,7 @@ def free_search_title(title):
 
 def free_search_genre(genre):
     db = get_db_conn()
-    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_genre LIKE ?"
+    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_genre LIKE %s"
     posts = db.GET_query(query, (f'%{genre}%',))
     db.db_close()
     print(f'%{genre}%')
@@ -30,8 +30,8 @@ def free_search_genre(genre):
 
 def free_search_title_n_author(title, author):
     db = get_db_conn()
-    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_title LIKE ?\
-        AND books.author_name LIKE ?"
+    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_title LIKE %s\
+        AND books.author_name LIKE %s"
     posts = db.GET_query(query, (f'%{title}%',f'%{author}%'),)
     db.db_close()
     print(posts)
@@ -39,8 +39,8 @@ def free_search_title_n_author(title, author):
 
 def free_search_genre_n_author(genre, author):
     db = get_db_conn()
-    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_genre LIKE ?\
-        AND books.author_name LIKE ?"
+    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_genre LIKE %s\
+        AND books.author_name LIKE %s"
     posts = db.GET_query(query, (f'%{genre}%',f'%{author}%'),)
     db.db_close()
     print(posts)
@@ -48,8 +48,8 @@ def free_search_genre_n_author(genre, author):
 
 def free_search_genre_n_title(genre, title):
     db = get_db_conn()
-    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_genre LIKE ?\
-        AND books.book_title LIKE ?"
+    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_genre LIKE %s\
+        AND books.book_title LIKE %s"
     posts = db.GET_query(query, (f'%{genre}%',f'%{title}%'),)
     db.db_close()
     print(posts)
@@ -57,8 +57,8 @@ def free_search_genre_n_title(genre, title):
 
 def free_search_genre_n_title_n_author(genre, title, author):
     db = get_db_conn()
-    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_genre LIKE ?\
-        AND books.book_title LIKE ? AND books.author_name LIKE ?"
+    query = f"SELECT DISTINCT(books.book_title), books.book_id, books.id, books.author_name, books.author_id, books.book_genre, books.description FROM books WHERE books.book_genre LIKE %s\
+        AND books.book_title LIKE %s AND books.author_name LIKE %s"
     posts = db.GET_query(query, (f'%{genre}%',f'%{title}%',f'%{author}%'),)
     db.db_close()
     print(posts)
@@ -167,7 +167,7 @@ SELECT DISTINCT (books.book_title),
 FROM 
     books 
 WHERE 
-    books.author_name LIKE ?
+    books.author_name LIKE %s
     
 #title
 
@@ -182,7 +182,7 @@ SELECT DISTINCT (books.book_title),
 FROM 
     books 
 WHERE 
-    books.book_title LIKE ?
+    books.book_title LIKE %s
 
 #genre
 
@@ -197,7 +197,7 @@ SELECT DISTINCT (books.book_title),
 FROM 
     books    
 WHERE 
-    books.book_genre LIKE ? 
+    books.book_genre LIKE %s 
 
 #title&author
 
@@ -211,9 +211,9 @@ SELECT DISTINCT (books.book_title),
     FROM 
         books 
     WHERE 
-        books.book_title LIKE ?
+        books.book_title LIKE %s
         AND 
-        books.author_name LIKE ?
+        books.author_name LIKE %s
 
 #genre&author
 
@@ -227,9 +227,9 @@ SELECT DISTINCT (books.book_title),
     FROM 
         books
     WHERE 
-        books.book_genre LIKE ?
+        books.book_genre LIKE %s
     AND 
-        books.author_name LIKE ?
+        books.author_name LIKE %s
 
  #genre&title  
 
@@ -243,9 +243,9 @@ SELECT DISTINCT (books.book_title),
     FROM 
         books     
     WHERE 
-        books.book_genre LIKE ?
+        books.book_genre LIKE %s
     AND 
-        books.book_title LIKE ?    
+        books.book_title LIKE %s    
 
         
 #genre&title&author      
@@ -260,10 +260,10 @@ SELECT DISTINCT (books.book_title),
     FROM 
         books        
     WHERE 
-        books.book_genre LIKE ?
+        books.book_genre LIKE %s
     AND 
-        books.book_title LIKE ? 
+        books.book_title LIKE %s 
     AND 
-        books.author_name LIKE ?       
+        books.author_name LIKE %s       
 
     """
